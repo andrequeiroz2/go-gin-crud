@@ -1,0 +1,41 @@
+
+version: '3'
+
+services:
+
+  mysqlsrv:
+    image: mysql:5.7 
+    environment:
+      MYSQL_ROOT_PASSWORD: "MySql2019!"
+      MYSQL_DATABASE: "gocrud"
+      MYSQL_USER: "gocrud"
+      MYSQL_PASSWORD: "MySql2019!"
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysqlserver:/var/lib/mysql/
+    networks: 
+      - mysqlnetwork
+
+  phpmyadmin: 
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - 8090:80
+    environment:
+      PMA_Host: mysqlsrv
+      MYSQL_ROOT_PASSWORD: MySql2019!
+    networks:
+      - mysqlnetwork
+    depends_on:
+      - mysqlsrv
+
+networks:
+  mysqlnetwork:
+    name: mysqlnetwork
+    driver: bridge
+
+volumes:
+  mysqlserver:
+    name: mysqlserver
+    external: true
